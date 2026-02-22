@@ -32,12 +32,12 @@ func (r *ResolverForTimeSpan) TimeSpans(ctx context.Context, fromInclusive *mode
 				return nil, errors.New("fromInclusive must be before toInclusive")
 			}
 
-			call = call.Where("start_user_time <= ? AND end_user_time >= ?", toInclusive.OmitTimeZone(), fromInclusive.OmitTimeZone())
+			call = call.Where("start_user_time >= ? AND start_user_time <= ?", fromInclusive.OmitTimeZone(), toInclusive.OmitTimeZone())
 		} else {
-			call = call.Where("start_user_time >= ? OR end_user_time >= ?", fromInclusive.OmitTimeZone(), fromInclusive.OmitTimeZone())
+			call = call.Where("start_user_time >= ?", fromInclusive.OmitTimeZone())
 		}
 	} else if toInclusive != nil {
-		call = call.Where("end_user_time <= ? OR start_user_time <= ?", toInclusive.OmitTimeZone(), toInclusive.OmitTimeZone())
+		call = call.Where("start_user_time <= ?", toInclusive.OmitTimeZone())
 	}
 
 	var timeSpans []model.TimeSpan
